@@ -74,7 +74,7 @@ export default function CreateProjectPage() {
             console.log("Submitting project data:", finalData); // Debugging log
     
             await dispatch(createProject(finalData)).unwrap();
-            router.push("/projects");
+            router.push("/dashboard");
         } catch (err) {
             setError(err instanceof Error ? err.message : "Failed to create project");
         } finally {
