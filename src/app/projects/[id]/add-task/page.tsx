@@ -16,7 +16,9 @@ export default function AddTaskPage() {
     title: "",
     description: "",
     status: "to_do",
-    assigned_to: "", // For assigning task
+    assigned_to: "",
+    project: Number(id), 
+    priority: "medium", // Default priority
   });
 
   // Fetch project details to get assigned users
@@ -41,6 +43,7 @@ export default function AddTaskPage() {
         status: taskData.status,
         project: Number(id),
         assigned_to: Number(taskData.assigned_to),
+        priority: taskData.priority, // Include priority
       })
     );
 
@@ -67,6 +70,13 @@ export default function AddTaskPage() {
             <option value="to_do">To Do</option>
             <option value="in_progress">In Progress</option>
             <option value="done">Done</option>
+          </select>
+        </div>
+        <div className="mb-3">
+          <label className="form-label">Priority</label>
+          <select name="priority" className="form-control" value={taskData.priority} onChange={handleChange}>
+            <option value="medium">Medium</option>
+            <option value="high">High</option>
           </select>
         </div>
         <div className="mb-3">

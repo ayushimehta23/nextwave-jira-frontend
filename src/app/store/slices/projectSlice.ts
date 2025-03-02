@@ -10,6 +10,7 @@ export interface Task {
   status: "to_do" | "in_progress" | "done"; // Ensure consistency
   project: number; // Project ID reference
   assigned_to: number | null; // User ID reference
+  priority: string;
 }
 
 // Project Types

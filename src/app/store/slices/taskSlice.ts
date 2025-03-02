@@ -11,6 +11,7 @@ interface Task {
   status: string;
   project: number;
   assigned_to: number;
+  priority: string; // ✅ Add priority field
 }
 
 interface TaskCreate {
@@ -19,6 +20,7 @@ interface TaskCreate {
   status: string;
   project: number;
   assigned_to: number;
+  priority: string;
 }
 
 interface TaskState {
