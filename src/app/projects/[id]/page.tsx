@@ -41,7 +41,6 @@ export default function ProjectDetailsPage() {
                         )}
                     </ul>
 
-                    {/* ✅ Add Task Button */}
                     <button 
     className="btn btn-success mt-3" 
     onClick={() => router.push(`/projects/${id}/add-task`)}
