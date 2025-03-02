@@ -14,7 +14,7 @@ export default function ProjectDetailsPage() {
 
     useEffect(() => {
         if (id) {
-          dispatch(fetchProjectById(Number(id))); // Call the function correctly
+          dispatch(fetchProjectById(Number(id))); 
         }
     }, [id, dispatch]);
 
