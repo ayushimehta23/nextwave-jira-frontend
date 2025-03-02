@@ -45,7 +45,7 @@ export default function AddTaskPage() {
     );
 
     if (createTask.fulfilled.match(result)) {
-      router.push(`/projects/${id}/board`); // Navigate to Kanban board after successful task creation
+      router.push(`/projects/${id}/kanban`); // Navigate to Kanban board after successful task creation
     }
   };
 

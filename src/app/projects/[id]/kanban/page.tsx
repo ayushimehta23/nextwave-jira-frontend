@@ -20,7 +20,7 @@ export default function KanbanBoard() {
     }
   }, [id, dispatch]);
 
-  const { project } = useSelector((state: RootState) => state.projects);
+  const { project, loading } = useSelector((state: RootState) => state.projects);
   console.log(project, "project")
   const tasks = project?.tasks || [];
 
@@ -37,17 +37,38 @@ export default function KanbanBoard() {
     if (source.droppableId !== destination.droppableId) {
       dispatch(updateTask({
         taskId: Number(draggableId),
-        updateData: { status: destination.droppableId }, // ✅ Fix: wrap status inside `updateData`
-      }));
+        updateData: { status: destination.droppableId },
+      }))
+      .unwrap() // Wait for the API call to complete
+      .then(() => {
+        dispatch(fetchProjectById(Number(id))); // Refetch project data
+      })
+      .catch((error) => {
+        console.error("Error updating task:", error);
+      });
     }
   };
+  
+
+  // const handleDragEnd = (result: DropResult) => {
+  //   if (!result.destination) return;
+  //   const { source, destination, draggableId } = result;
+  
+  //   if (source.droppableId !== destination.droppableId) {
+  //     dispatch(updateTask({
+  //       taskId: Number(draggableId),
+  //       updateData: { status: destination.droppableId }, // ✅ Fix: wrap status inside `updateData`
+  //     }));
+  //   }
+  // };
 
   return (
     <div className="container mt-4">
       <h2 className="mb-4">Project Kanban Board</h2>
       <DragDropContext onDragEnd={handleDragEnd}>
         <div className="row">
-          {Object.entries(columns).map(([status, title]) => (
+          
+          {!loading && Object.entries(columns).map(([status, title]) => (
             <div key={status} className="col-md-4">
               <h4 className="text-center">{title}</h4>
               <Droppable droppableId={status}>
