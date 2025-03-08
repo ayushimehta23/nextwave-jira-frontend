@@ -9,7 +9,8 @@ export interface Task {
   description: string;
   status: "to_do" | "in_progress" | "done"; // Ensure consistency
   project: number; // Project ID reference
-  assigned_to: number | null; // User ID reference
+  assigned_to_id: number | null; // User ID reference
+  assigned_to: { id: number; username: string; email: string } | null;
   priority: string;
 }
 

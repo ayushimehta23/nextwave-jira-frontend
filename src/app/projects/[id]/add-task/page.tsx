@@ -16,7 +16,7 @@ export default function AddTaskPage() {
     title: "",
     description: "",
     status: "to_do",
-    assigned_to: "",
+    assigned_to_id: "",
     project: Number(id), 
     priority: "medium", // Default priority
   });
@@ -42,7 +42,7 @@ export default function AddTaskPage() {
         description: taskData.description,
         status: taskData.status,
         project: Number(id),
-        assigned_to: Number(taskData.assigned_to),
+        assigned_to_id: Number(taskData.assigned_to_id),
         priority: taskData.priority, // Include priority
       })
     );
@@ -75,13 +75,14 @@ export default function AddTaskPage() {
         <div className="mb-3">
           <label className="form-label">Priority</label>
           <select name="priority" className="form-control" value={taskData.priority} onChange={handleChange}>
+          <option value="low">Low</option>
             <option value="medium">Medium</option>
             <option value="high">High</option>
           </select>
         </div>
         <div className="mb-3">
           <label className="form-label">Assign To</label>
-          <select name="assigned_to" className="form-control" value={taskData.assigned_to} onChange={handleChange} required>
+          <select name="assigned_to_id" className="form-control" value={taskData.assigned_to_id} onChange={handleChange} required>
             <option value="">Select a user</option>
             {project?.team_members?.map((member) => (
               <option key={member.id} value={member.id}>

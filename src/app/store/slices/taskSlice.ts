@@ -10,7 +10,7 @@ interface Task {
   description: string;
   status: string;
   project: number;
-  assigned_to: number;
+  assigned_to_id: number;
   priority: string; // ✅ Add priority field
 }
 
@@ -19,7 +19,7 @@ interface TaskCreate {
   description: string;
   status: string;
   project: number;
-  assigned_to: number;
+  assigned_to_id: number;
   priority: string;
 }
 
