@@ -19,6 +19,7 @@ export default function AddTaskPage() {
     assigned_to_id: "",
     project: Number(id), 
     priority: "medium", // Default priority
+    deadline: "", // ✅ Added deadline field
   });
 
   // Fetch project details to get assigned users
@@ -44,6 +45,7 @@ export default function AddTaskPage() {
         project: Number(id),
         assigned_to_id: Number(taskData.assigned_to_id),
         priority: taskData.priority, // Include priority
+        deadline: taskData.deadline ? new Date(taskData.deadline).toISOString() : null, // ✅ Convert deadline to ISO format
       })
     );
 
@@ -75,7 +77,7 @@ export default function AddTaskPage() {
         <div className="mb-3">
           <label className="form-label">Priority</label>
           <select name="priority" className="form-control" value={taskData.priority} onChange={handleChange}>
-          <option value="low">Low</option>
+            <option value="low">Low</option>
             <option value="medium">Medium</option>
             <option value="high">High</option>
           </select>
@@ -90,6 +92,16 @@ export default function AddTaskPage() {
               </option>
             ))}
           </select>
+        </div>
+        <div className="mb-3">
+          <label className="form-label">Deadline</label>
+          <input
+            type="datetime-local" // ✅ Allows users to select both date and time
+            name="deadline"
+            className="form-control"
+            value={taskData.deadline}
+            onChange={handleChange}
+          />
         </div>
         <button type="submit" className="btn btn-primary">Create Task</button>
       </form>

@@ -12,6 +12,8 @@ import { FaSignOutAlt, FaTachometerAlt, FaProjectDiagram, FaCog, FaColumns } fro
 
 const HeaderFooter = ({ children }: { children: React.ReactNode }) => {
   const dispatch = useDispatch<AppDispatch>();
+const token = localStorage.getItem("token")
+console.log(token, "token")
   const router = useRouter();
 
   useEffect(() => {
@@ -65,9 +67,11 @@ const HeaderFooter = ({ children }: { children: React.ReactNode }) => {
                 <FaCog className="me-2" /> Settings
               </Nav.Link>
             </Nav>
+            {token && (
             <Button variant="danger" onClick={handleLogout}>
               <FaSignOutAlt className="me-2" /> Logout
             </Button>
+            )}
           </Navbar.Collapse>
         </Container>
       </Navbar>

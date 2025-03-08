@@ -11,6 +11,7 @@ export interface Task {
   project: number; // Project ID reference
   assigned_to_id: number | null; // User ID reference
   assigned_to: { id: number; username: string; email: string } | null;
+  deadline: string | null;
   priority: string;
 }
 

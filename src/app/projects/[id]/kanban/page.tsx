@@ -16,8 +16,6 @@ type TaskPriority = "high" | "medium" | "low";
 export default function KanbanBoard() {
   const dispatch = useDispatch<AppDispatch>();
   const { id } = useParams();
-// ✅ Explicitly ensure TypeScript knows tasks is Task[]
-
 
   useEffect(() => {
     if (id) {
@@ -87,25 +85,29 @@ export default function KanbanBoard() {
                         ) // Sort tasks by priority
                         .map((task, index) => (
                           <Draggable key={task.id} draggableId={task.id.toString()} index={index}>
-                          {(provided) => (
-                            <div
-                              ref={provided.innerRef}
-                              {...provided.draggableProps}
-                              {...provided.dragHandleProps}
-                              className="card mb-2 p-2 shadow-sm"
-                            >
-                              <h6 className={`card-title ${priorityMapping[task.priority as TaskPriority].color}`}>
-                                {priorityMapping[task.priority as TaskPriority].symbol} {task.title}
-                              </h6>
-                              <p className="card-text text-muted">{task.description}</p>
-                              <p className="card-text">
-                                <strong>Assigned to: </strong>
-                                {task.assigned_to ? task.assigned_to.username : "Unassigned"}
-                              </p>
-                            </div>
-                          )}
-                        </Draggable>
-                        
+                            {(provided) => (
+                              <div
+                                ref={provided.innerRef}
+                                {...provided.draggableProps}
+                                {...provided.dragHandleProps}
+                                className="card mb-2 p-2 shadow-sm"
+                              >
+                                <h6 className={`card-title ${priorityMapping[task.priority as TaskPriority].color}`}>
+                                  {priorityMapping[task.priority as TaskPriority].symbol} {task.title}
+                                </h6>
+                                <p className="card-text text-muted">{task.description}</p>
+                                <p className="card-text">
+                                  <strong>Assigned to: </strong>
+                                  {task.assigned_to ? task.assigned_to.username : "Unassigned"}
+                                </p>
+                                {task.deadline && (
+                                  <p className="card-text">
+                                    <strong>Deadline: </strong> {new Date(task.deadline).toLocaleString()}
+                                  </p>
+                                )}
+                              </div>
+                            )}
+                          </Draggable>
                         ))}
                       {provided.placeholder}
                     </div>

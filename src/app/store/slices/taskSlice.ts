@@ -21,6 +21,7 @@ interface TaskCreate {
   project: number;
   assigned_to_id: number;
   priority: string;
+  deadline: string | null
 }
 
 interface TaskState {
