@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "next/navigation";
 import { AppDispatch, RootState } from "@/app/store/store";
@@ -10,12 +10,18 @@ import { DropResult } from "@hello-pangea/dnd";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { updateTask } from "@/app/store/slices/taskSlice";
 
-// Define valid priority types
-type TaskPriority = "high" | "medium" | "low";
+// Define valid filter types
+type TaskPriority = "all" | "high" | "medium" | "low";
+type TaskStatus = "all" | "to_do" | "in_progress" | "done";
 
 export default function KanbanBoard() {
   const dispatch = useDispatch<AppDispatch>();
   const { id } = useParams();
+
+  const [selectedPriority, setSelectedPriority] = useState<TaskPriority>("all");
+  const [selectedStatus, setSelectedStatus] = useState<TaskStatus>("all");
+  const [selectedAssignee, setSelectedAssignee] = useState<string>("all");
+  const [searchQuery, setSearchQuery] = useState<string>("");
 
   useEffect(() => {
     if (id) {
@@ -25,6 +31,7 @@ export default function KanbanBoard() {
 
   const { project, loading } = useSelector((state: RootState) => state.projects);
   const tasks = project?.tasks || [];
+  const teamMembers = project?.team_members || []; // Assuming team_members array is available in project data
 
   const columns = {
     to_do: "To Do",
@@ -34,9 +41,10 @@ export default function KanbanBoard() {
 
   // Priority mapping for sorting & colors
   const priorityMapping: Record<TaskPriority, { order: number; color: string; symbol: string }> = {
-    high: { order: 2, color: "text-warning", symbol: "🟠" },
-    medium: { order: 3, color: "text-primary", symbol: "🟡" },
-    low: { order: 4, color: "text-success", symbol: "🟢" },
+    high: { order: 1, color: "text-danger", symbol: "🔴" },
+    medium: { order: 2, color: "text-warning", symbol: "🟠" },
+    low: { order: 3, color: "text-success", symbol: "🟢" },
+    all: { order: 4, color: "text-dark", symbol: "" },
   };
 
   const handleDragEnd = (result: DropResult) => {
@@ -63,6 +71,69 @@ export default function KanbanBoard() {
   return (
     <div className="container mt-4">
       <h2 className="mb-4">Project Kanban Board</h2>
+
+      {/* Filters */}
+      <div className="d-flex flex-wrap gap-3 mb-3">
+        {/* Search Filter */}
+        <div>
+          <label className="me-2"><strong>Search Tasks:</strong></label>
+          <input
+            type="text"
+            className="form-control w-auto d-inline"
+            placeholder="Search by title..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value.toLowerCase())}
+          />
+        </div>
+
+        {/* Priority Filter */}
+        <div>
+          <label className="me-2"><strong>Filter by Priority:</strong></label>
+          <select
+            className="form-select w-auto d-inline"
+            value={selectedPriority}
+            onChange={(e) => setSelectedPriority(e.target.value as TaskPriority)}
+          >
+            <option value="all">All Priorities</option>
+            <option value="high">High Priority</option>
+            <option value="medium">Medium Priority</option>
+            <option value="low">Low Priority</option>
+          </select>
+        </div>
+
+        {/* Status Filter */}
+        <div>
+          <label className="me-2"><strong>Filter by Status:</strong></label>
+          <select
+            className="form-select w-auto d-inline"
+            value={selectedStatus}
+            onChange={(e) => setSelectedStatus(e.target.value as TaskStatus)}
+          >
+            <option value="all">All Statuses</option>
+            <option value="to_do">To Do</option>
+            <option value="in_progress">In Progress</option>
+            <option value="done">Done</option>
+          </select>
+        </div>
+
+        {/* Assignee Filter */}
+        <div>
+          <label className="me-2"><strong>Filter by Assignee:</strong></label>
+          <select
+            className="form-select w-auto d-inline"
+            value={selectedAssignee}
+            onChange={(e) => setSelectedAssignee(e.target.value)}
+          >
+            <option value="all">All Assignees</option>
+            {teamMembers.map((member: { id: number; username: string }) => (
+              <option key={member.id} value={member.username}>
+                {member.username}
+              </option>
+            ))}
+          </select>
+        </div>
+      </div>
+
       <DragDropContext onDragEnd={handleDragEnd}>
         <div className="row">
           {!loading &&
@@ -77,7 +148,14 @@ export default function KanbanBoard() {
                       className="p-3 border rounded bg-light min-vh-50"
                     >
                       {tasks
-                        .filter((task) => task.status === status)
+                        .filter(
+                          (task) =>
+                            (selectedStatus === "all" || task.status === selectedStatus) && // Status filter
+                            (selectedPriority === "all" || task.priority === selectedPriority) && // Priority filter
+                            (selectedAssignee === "all" || (task.assigned_to && task.assigned_to.username === selectedAssignee)) && // Assignee filter
+                            (searchQuery === "" || task.title.toLowerCase().includes(searchQuery)) // Search filter
+                        )
+                        .filter((task) => task.status === status) // Ensure tasks appear in the correct column
                         .sort(
                           (a, b) =>
                             priorityMapping[a.priority as TaskPriority].order -
