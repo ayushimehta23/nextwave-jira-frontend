@@ -183,6 +183,21 @@ export default function KanbanBoard() {
                                     <strong>Deadline: </strong> {new Date(task.deadline).toLocaleString()}
                                   </p>
                                 )}
+                               {task.comments.length > 0 && (
+                                  <div className="mt-2 p-2 border rounded bg-secondary-subtle">
+                                    <strong>Comments:</strong>
+                                    {task.comments.map((comment) => (
+                                      <div key={comment.id} className="border-bottom pb-1 mb-1">
+                                        <small><strong>{comment.user}:</strong> {comment.text}</small>
+                                        <br />
+                                        <small className="text-muted">
+                                          {new Date(comment.created_at).toLocaleString()}
+                                        </small>
+                                      </div>
+                                    ))}
+                                  </div>
+                                )}
+                           
                               </div>
                             )}
                           </Draggable>

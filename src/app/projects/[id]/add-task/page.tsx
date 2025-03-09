@@ -17,9 +17,10 @@ export default function AddTaskPage() {
     description: "",
     status: "to_do",
     assigned_to_id: "",
-    project: Number(id), 
+    project: Number(id),
     priority: "medium", // Default priority
     deadline: "", // ✅ Added deadline field
+    comment: "", // ✅ Added comment field
   });
 
   // Fetch project details to get assigned users
@@ -46,6 +47,7 @@ export default function AddTaskPage() {
         assigned_to_id: Number(taskData.assigned_to_id),
         priority: taskData.priority, // Include priority
         deadline: taskData.deadline ? new Date(taskData.deadline).toISOString() : null, // ✅ Convert deadline to ISO format
+        comment: taskData.comment, // ✅ Send comment along with task
       })
     );
 
@@ -103,6 +105,19 @@ export default function AddTaskPage() {
             onChange={handleChange}
           />
         </div>
+
+        {/* ✅ Comment Input Section */}
+        <div className="mb-3">
+          <label className="form-label">Add Comment (Optional)</label>
+          <textarea
+            name="comment"
+            className="form-control"
+            placeholder="Add a comment..."
+            value={taskData.comment}
+            onChange={handleChange}
+          />
+        </div>
+
         <button type="submit" className="btn btn-primary">Create Task</button>
       </form>
     </div>
